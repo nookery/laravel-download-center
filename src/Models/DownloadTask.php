@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 
 class DownloadTask extends Model
 {
-    protected $table = 'task';
+    protected $table = 'download_center_task';
 
     /**
      * 根据筛选条件，返回数据库中对应的记录
