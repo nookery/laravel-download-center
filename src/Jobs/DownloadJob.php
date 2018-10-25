@@ -110,7 +110,7 @@ class DownloadJob extends Job
             // 如果任务没有处理完，等待下次处理
             $this->downloadTask->status = 'ready';
             $this->downloadTask->save();
-            dispatch(new Download(DownloadTask::find($this->downloadTask->id)));
+            dispatch(new self(DownloadTask::find($this->downloadTask->id)));
         } else {
             // 任务处理完，则创建zip文件，清理临时目录
             $this->createZipFile();
