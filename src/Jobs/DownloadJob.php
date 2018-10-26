@@ -1,6 +1,6 @@
 <?php
 
-namespace DownloadCenter\Jobs;
+namespace LaravelDownloader\Jobs;
 
 use App\Jobs\DeleteFile;
 use App\Jobs\Job;

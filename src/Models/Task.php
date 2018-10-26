@@ -1,6 +1,6 @@
 <?php
 
-namespace DownloadCenter\Models;
+namespace LaravelDownloader\Models;
 
 use DownloadCenter\Jobs\DownloadJob;
 use Illuminate\Database\Eloquent\Model;

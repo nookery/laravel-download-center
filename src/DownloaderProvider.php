@@ -1,6 +1,6 @@
 <?php
 
-namespace DownloadCenter;
+namespace LaravelDownloader;
 
 use DownloadCenter\Facades\Downloader;
 use Illuminate\Support\ServiceProvider;
