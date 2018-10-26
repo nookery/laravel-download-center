@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDownloadCenterTaskTable extends Migration
+class CreateDownloaderTaskTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDownloadCenterTaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('download_center_task', function (Blueprint $table) {
+        Schema::create('downloader_task', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('hash', 32)->comment('哈希值，哈希值相同则认为可以作为缓存');
             $table->text('model')->comment('序列化后的Model');
@@ -38,6 +38,6 @@ class CreateDownloadCenterTaskTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('download_center_task');
+        Schema::dropIfExists('downloader_task');
     }
 }

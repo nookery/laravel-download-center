@@ -1,6 +1,6 @@
 <?php
 
-namespace DownloadCenter\Facades;
+namespace DownloadCenter;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -8,11 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Facade;
 use Rap2hpoutre\FastExcel\FastExcel;
 
-class DownloadTask extends Facade
+class Downloader
 {
-    public static function getFacadeAccessor()
+
+    protected $document_size = 1;
+
+    public function document_size($size)
     {
-        return 'task';
+        $this->document_size = $size;
+
+        return $this;
     }
 
     /**
@@ -26,7 +31,7 @@ class DownloadTask extends Facade
      * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
      * @throws \Box\Spout\Writer\Exception\WriterNotOpenedException
      */
-    public static function getFilePath(Model $model, $filter = [])
+    public function export(Model $model, $filter = [])
     {
         $builder = $model->ofDownload($filter);
         $count = $builder->count();
@@ -39,7 +44,7 @@ class DownloadTask extends Facade
             return $path;
         } else {
             // 数量大时，查询是否有缓存，有则返回缓存文件路径，否则创建任务
-            $task = \DownloadCenter\Models\DownloadTask::getTask($model, $filter);
+            $task = \DownloadCenter\Models\Task::getTask($model, $filter);
 
             if (is_file($task->file_path)) {
                 return $task->file_path;

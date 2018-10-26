@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class DownloadTask extends Model
+class Task extends Model
 {
-    protected $table = 'download_center_task';
+    protected $table = 'downloader_task';
 
     /**
      * 根据筛选条件，返回数据库中对应的记录

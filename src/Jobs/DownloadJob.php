@@ -4,7 +4,7 @@ namespace DownloadCenter\Jobs;
 
 use App\Jobs\DeleteFile;
 use App\Jobs\Job;
-use DownloadCenter\Models\DownloadTask;
+use DownloadCenter\Models\Task;
 use Illuminate\Database\Eloquent\Collection;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
@@ -40,7 +40,7 @@ class DownloadJob extends Job
      */
 	public $downloadTask;
 
-	public function __construct(DownloadTask $downloadTask)
+	public function __construct(Task $downloadTask)
     {
         $this->downloadTask = $downloadTask;
     }
@@ -55,13 +55,13 @@ class DownloadJob extends Job
      */
 	public function handle()
 	{
-	    $lockResult = DownloadTask::where('id', $this->downloadTask->id)
+	    $lockResult = Task::where('id', $this->downloadTask->id)
             ->where('status', 'ready')
             ->update(['status' => 'processing']);
 	    if (!$lockResult) {
 	        return false;
         } else {
-	        $this->downloadTask = DownloadTask::find($this->downloadTask->id);
+	        $this->downloadTask = Task::find($this->downloadTask->id);
         }
 
 	    // 一个Excel文件中有多个sheet，一个sheet中有多个item
@@ -110,7 +110,7 @@ class DownloadJob extends Job
             // 如果任务没有处理完，等待下次处理
             $this->downloadTask->status = 'ready';
             $this->downloadTask->save();
-            dispatch(new self(DownloadTask::find($this->downloadTask->id)));
+            dispatch(new self(Task::find($this->downloadTask->id)));
         } else {
             // 任务处理完，则创建zip文件，清理临时目录
             $this->createZipFile();

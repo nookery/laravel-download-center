@@ -2,10 +2,10 @@
 
 namespace DownloadCenter;
 
-use DownloadCenter\Facades\DownloadTask;
+use DownloadCenter\Facades\Downloader;
 use Illuminate\Support\ServiceProvider;
 
-class DownloadCenterProvider extends ServiceProvider
+class DownloaderProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -24,9 +24,9 @@ class DownloadCenterProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('task', function ($app)
+        $this->app->singleton('downloader', function ($app)
         {
-            $downloadTask = new DownloadTask();
+            $downloadTask = new Downloader();
 
             return $downloadTask;
         });

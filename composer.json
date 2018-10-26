@@ -1,8 +1,8 @@
 {
-    "name": "nookery/laravel-download-center",
+    "name": "nookery/laravel-downloader",
     "license": "MIT",
     "description": "Laravel中，配合队列实现从数据库导出大量数据",
-    "homepage": "https://github.com/nookery/laravel-download-center",
+    "homepage": "https://github.com/nookery/laravel-downloader",
     "authors": [
         {
             "name": "Nookery",
@@ -15,13 +15,13 @@
     },
     "autoload": {
         "psr-4": {
-            "DownloadCenter\\": "src/"
+            "LaravelDownloader\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "DownloadCenter\\DownloadCenterProvider"
+                "LaravelDownloader\\DownloaderProvider"
             ]
         }
     }
