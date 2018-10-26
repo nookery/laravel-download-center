@@ -2,7 +2,6 @@
 
 namespace LaravelDownloader;
 
-use DownloadCenter\Facades\Downloader;
 use Illuminate\Support\ServiceProvider;
 
 class DownloaderProvider extends ServiceProvider

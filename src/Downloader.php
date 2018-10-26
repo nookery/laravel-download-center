@@ -2,10 +2,8 @@
 
 namespace LaravelDownloader;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Facade;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class Downloader
@@ -44,7 +42,7 @@ class Downloader
             return $path;
         } else {
             // 数量大时，查询是否有缓存，有则返回缓存文件路径，否则创建任务
-            $task = \DownloadCenter\Models\Task::getTask($model, $filter);
+            $task = \LaravelDownloader\Models\Task::getTask($model, $filter);
 
             if (is_file($task->file_path)) {
                 return $task->file_path;
