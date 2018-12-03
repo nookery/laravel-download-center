@@ -56,10 +56,14 @@ class Downloader
     {
         $builder = $model->ofDownload($filter);
         $count = $builder->count();
+        $path = storage_path('app/public/'.$model->getTable().'.xlsx');
 
-        if ($count <= 20000) {
+        if ($count == 0) {
+            (new FastExcel([]))->export($path);
+
+            return $path;
+        } else if ($count <= 20000) {
             // 数量较少时，直接输出并下载
-            $path = storage_path('app/public/'.$model->getTable().'.xlsx');
             (new FastExcel($builder->get()))->export($path);
 
             return $path;
