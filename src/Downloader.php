@@ -2,18 +2,41 @@
 
 namespace LaravelDownloader;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use LaravelDownloader\Jobs\MakeFile;
+use LaravelDownloader\Models\Task;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class Downloader
 {
-
+    /**
+     * 每个Excel存放多少个sheet
+     *
+     * @var int
+     */
     protected $document_size = 1;
 
-    public function document_size($size)
+    /**
+     * 每个Sheet存放多少个item
+     *
+     * @var int
+     */
+    protected $sheet_size = 1000;
+
+    /**
+     * 设置属性
+     *
+     * @param string $attribute
+     * @param string $value
+     * @return $this
+     */
+    public function set($attribute = '', $value = '')
     {
-        $this->document_size = $size;
+        if (isset($this->$attribute)) {
+            $this->$attribute = $value;
+        }
 
         return $this;
     }
@@ -42,7 +65,7 @@ class Downloader
             return $path;
         } else {
             // 数量大时，查询是否有缓存，有则返回缓存文件路径，否则创建任务
-            $task = \LaravelDownloader\Models\Task::getTask($model, $filter);
+            $task = $this->getTask($model, $filter);
 
             if (is_file($task->file_path)) {
                 return $task->file_path;
@@ -50,5 +73,43 @@ class Downloader
                 return false;
             }
         }
+    }
+
+    /**
+     * 根据筛选条件，返回数据库中对应的记录
+     *
+     * @param Model $model
+     * @param array $filter
+     * @return mixed
+     */
+    public function getTask(Model $model, $filter = [])
+    {
+        // 找出一个文件有效的记录
+        $task = Task::where('model', serialize($model))
+            ->where('query', http_build_query($filter))
+            ->ofValid()
+            ->first();
+
+        if (!$task || ($task && !is_file($task->file_path))) {
+            // 找出一个有效的正在进行的记录
+            $task = Task::where('model', serialize($model))
+                ->where('query', http_build_query($filter))
+                ->ofProcessing()
+                ->first();
+
+            if (!$task) {
+                // 找不到有效记录，生成并返回任务记录
+                $task = new Task();
+                $task->model = $model;
+                $task->query = $filter;
+                $task->sheet_size = $this->sheet_size;
+                $task->document_size = 5;
+                $task->save();
+            }
+
+            dispatch(new MakeFile($task));
+        }
+
+        return $task;
     }
 }
