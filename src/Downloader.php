@@ -92,6 +92,7 @@ class Downloader
         $task = Task::where('model', serialize($model))
             ->where('query', http_build_query($filter))
             ->ofValid()
+            ->orderBy('id', 'desc')
             ->first();
 
         if (!$task || ($task && !is_file($task->file_path))) {
